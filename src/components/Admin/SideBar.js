@@ -13,9 +13,10 @@ import sidebarBg from '../../assets/bg2.jpg';
 import { DiReact } from "react-icons/di";
 import { MdDashboard } from "react-icons/md";
 import './SideBar.scss'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const SideBar = (props) => {
+    const navigate = useNavigate();
     const { collapsed, toggled, handleToggleSidebar } = props;
     return (
         <>
@@ -40,7 +41,7 @@ const SideBar = (props) => {
                         }}
                     >
                         <DiReact size={'3em'} color='#00bfff' />
-                        <span>
+                        <span onClick={() => navigate('/')}>
                             Jun Nguyen
                         </span>
                     </div>
@@ -60,9 +61,9 @@ const SideBar = (props) => {
                             icon={<FaGem />}
                             title={"Features"}
                         >
-                            <MenuItem>Users Management<Link to="/admins/manage-users" /></MenuItem>
-                            <MenuItem>Quizzes Management</MenuItem>
-                            <MenuItem>Questions Management</MenuItem>
+                            <MenuItem>User Management<Link to="/admins/manage-users" /></MenuItem>
+                            <MenuItem>Quiz Management<Link to="/admins/manage-quizzes" /></MenuItem>
+                            <MenuItem>Question Management</MenuItem>
                         </SubMenu>
                     </Menu>
                 </SidebarContent>
