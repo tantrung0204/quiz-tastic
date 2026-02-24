@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import './ManageQuiz.scss';
 import Select from 'react-select';
+import { postCreateNewQuiz } from '../../../../services/apiServices';
+import { toast } from 'react-toastify';
 
 const options = [
     { value: 'EASY', label: 'EASY' },
@@ -11,11 +13,34 @@ const options = [
 const ManageQuiz = (props) => {
     const [name, setName] = useState('');
     const [description, setDescrition] = useState('');
-    const [type, setType] = useState('EASY');
+    const [type, setType] = useState({ value: 'EASY', label: 'EASY' });
     const [image, setImage] = useState(null);
+    const fileInputRef = useRef(null);
 
     const handleChangeFile = (event) => {
+        if (event.target && event.target.files && event.target.files[0]) {
+            setImage(event.target.files[0]);
+        }
+    }
 
+    const handleSubmitQuiz = async () => {
+        // validate
+        if (!name || !description) {
+            toast.error("Name/Description is required");
+            return;
+        }
+        let res = await postCreateNewQuiz(description, name, type?.value, image);
+        if (res && res.EC === 0) {
+            toast.success(res.EM);
+            setName('');
+            setDescrition('');
+            setImage('');
+            if (fileInputRef.current) {
+                fileInputRef.current.value = null;
+            }
+        } else {
+            toast.error(res.EM);
+        }
     }
 
     return (
@@ -47,8 +72,8 @@ const ManageQuiz = (props) => {
                     </div>
                     <div className='my-3'>
                         <Select
-                            value={type}
-                            // onChange={this.handleChange}
+                            defaultValue={type}
+                            onChange={setType}
                             options={options}
                             placeholder={"Quiz type..."}
                         />
@@ -58,8 +83,15 @@ const ManageQuiz = (props) => {
                         <input
                             type='file'
                             className='form-control'
+                            ref={fileInputRef}
                             onChange={e => handleChangeFile(e)} />
-
+                    </div>
+                    <div>
+                        <button
+                            className='btn btn-warning mt-3'
+                            onClick={() => handleSubmitQuiz()}>
+                            Save
+                        </button>
                     </div>
                 </fieldset>
             </div>
