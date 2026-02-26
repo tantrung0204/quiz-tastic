@@ -5,7 +5,7 @@ import {
 import Admin from './components/Admin/Admin';
 import User from './components/User/User';
 import HomePage from './components/Home/HomePage';
-import ManageUser from './components/Admin/Content/ManageUser';
+import ManageUser from './components/Admin/Content/User/ManageUser';
 import Dashboard from './components/Admin/Content/Dashboard';
 import Login from './components/Auth/Login';
 import App from "./App";

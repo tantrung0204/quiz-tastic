@@ -5,11 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import 'nprogress/nprogress.css';
-import {
-  BrowserRouter,
-  Routes,
-  Route
-} from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import Layout from './Layout';
 import { Provider } from 'react-redux';
 import { store, persistor } from './redux/store';

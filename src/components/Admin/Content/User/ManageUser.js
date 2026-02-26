@@ -4,13 +4,13 @@ import './ManageUser.scss'
 import { FcPlus } from "react-icons/fc";
 import TableUser from "./TableUser";
 import { useEffect, useState } from "react";
-import { getAllUsers, getUserWithPaginate } from "../../../services/apiServices";
+import { getAllUsers, getUserWithPaginate } from "../../../../services/apiServices";
 import ModalViewUser from "./ModalViewUser";
 import ModalDeleteUser from "./ModalDeleteUser";
 import TableUserPaginate from "./TableUserPaginate";
 
 const ManageUser = (props) => {
-    const LIMIT_USER = 2;
+    const LIMIT_USER = 5;
     const [pageCount, setPageCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
 
