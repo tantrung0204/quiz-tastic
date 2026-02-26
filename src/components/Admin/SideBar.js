@@ -41,7 +41,7 @@ const SideBar = (props) => {
                         }}
                     >
                         <DiReact size={'3em'} color='#00bfff' />
-                        <span onClick={() => navigate('/')}>
+                        <span style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>
                             Jun Nguyen
                         </span>
                     </div>

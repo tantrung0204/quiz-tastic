@@ -71,9 +71,25 @@ const getAllQuizForAdmin = () => {
     return axios.get(`api/v1/quiz/all`);
 }
 
+const putUpdateQuizForAdmin = (id, description, name, difficulty, quizImage) => {
+    // submit data
+    const data = new FormData();
+    data.append('id', id);
+    data.append('description', description);
+    data.append('name', name);
+    data.append('difficulty', difficulty);
+    data.append('quizImage', quizImage);
+    return axios.put('api/v1/quiz', data);
+}
+
+const deleteQuizForAdmin = (quizId) => {
+    return axios.delete(`api/v1/quiz/${quizId}`);
+}
+
 export {
     postCreateNewUser, getAllUsers, putUpdateUser,
     deleteUser, getUserWithPaginate, postLogin,
     postRegister, getQuizByUser, getDataQuiz,
-    postSubmitQuiz, postCreateNewQuiz, getAllQuizForAdmin
+    postSubmitQuiz, postCreateNewQuiz, getAllQuizForAdmin,
+    putUpdateQuizForAdmin, deleteQuizForAdmin
 }
