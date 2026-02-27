@@ -3,7 +3,6 @@ import {
     Route
 } from "react-router-dom";
 import Admin from './components/Admin/Admin';
-import User from './components/User/User';
 import HomePage from './components/Home/HomePage';
 import ManageUser from './components/Admin/Content/User/ManageUser';
 import Dashboard from './components/Admin/Content/Dashboard';
@@ -15,6 +14,7 @@ import Register from "./components/Auth/Register";
 import ListQuiz from "./components/User/ListQuiz";
 import DetailQuiz from "./components/User/DetailQuiz";
 import ManageQuiz from "./components/Admin/Content/Quiz/ManageQuiz";
+import Questions from "./components/Admin/Content/Question/Questions";
 
 const NotFound = () => {
     return (
@@ -38,6 +38,7 @@ const Layout = (props) => {
                     <Route index element={<Dashboard />} />
                     <Route path="manage-users" element={<ManageUser />} />
                     <Route path="manage-quizzes" element={<ManageQuiz />} />
+                    <Route path="manage-questions" element={<Questions />} />
                 </Route>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />

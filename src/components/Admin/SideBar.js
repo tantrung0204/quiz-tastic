@@ -61,9 +61,15 @@ const SideBar = (props) => {
                             icon={<FaGem />}
                             title={"Features"}
                         >
-                            <MenuItem>User Management<Link to="/admins/manage-users" /></MenuItem>
-                            <MenuItem>Quiz Management<Link to="/admins/manage-quizzes" /></MenuItem>
-                            <MenuItem>Question Management</MenuItem>
+                            <MenuItem>User Management
+                                <Link to="/admins/manage-users" />
+                            </MenuItem>
+                            <MenuItem>Quiz Management
+                                <Link to="/admins/manage-quizzes" />
+                            </MenuItem>
+                            <MenuItem>Question Management
+                                <Link to="/admins/manage-questions" />
+                            </MenuItem>
                         </SubMenu>
                     </Menu>
                 </SidebarContent>
