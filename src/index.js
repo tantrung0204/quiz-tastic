@@ -9,8 +9,8 @@ import { BrowserRouter } from "react-router-dom";
 import Layout from './Layout';
 import { Provider } from 'react-redux';
 import { store, persistor } from './redux/store';
-import { PersistGate } from 'redux-persist/integration/react'
-
+import { PersistGate } from 'redux-persist/integration/react';
+import "yet-another-react-lightbox/styles.css";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
