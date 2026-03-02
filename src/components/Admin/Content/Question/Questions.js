@@ -8,6 +8,7 @@ import { AiOutlineMinusCircle } from "react-icons/ai";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
+import Lightbox from "yet-another-react-lightbox";
 
 const Questions = () => {
 
@@ -16,6 +17,8 @@ const Questions = () => {
         { value: 'MEDIUM', label: 'MEDIUM' },
         { value: 'HARD', label: 'HARD' },
     ];
+    const [isPreviewImage, setIsPreviewImage] = useState(false);
+    const [dataImagePreview, setDataImagePreview] = useState("");
     const [selectedQuiz, setSelectedQuiz] = useState({});
     const [questions, setQuestions] = useState(
         [
@@ -130,6 +133,15 @@ const Questions = () => {
         console.log('>> check question', questions);
     }
 
+    const handlePreviewImage = (questionId) => {
+        let questionsClone = _.cloneDeep(questions);
+        let index = questionsClone.findIndex(item => item.id === questionId);
+        if (index > -1) {
+            setDataImagePreview(URL.createObjectURL(questionsClone[index].imageFile));
+            setIsPreviewImage(true);
+        }
+    }
+
     return (
         <div className="questions-container">
             <div className="title">
@@ -171,7 +183,12 @@ const Questions = () => {
                                             onChange={(event) => handleOnChangeFileQuestion(question.id, event)}
                                             type="file"
                                             hidden />
-                                        <span>{question.imageName ? question.imageName : '0 File is uploaded'}</span>
+                                        <span>
+                                            {question.imageName ?
+                                                <span style={{ cursor: "pointer" }} onClick={() => handlePreviewImage(question.id)}>{question.imageName}</span>
+                                                :
+                                                '0 File is uploaded'}
+                                        </span>
                                     </div>
                                     <div className="btn-add">
                                         <span onClick={() => handleAddRemoveQuestion('ADD', '')}>
@@ -184,7 +201,8 @@ const Questions = () => {
                                         }
                                     </div>
                                 </div>
-                                {question.answers && question.answers.length > 0 &&
+                                {
+                                    question.answers && question.answers.length > 0 &&
                                     question.answers.map((answer, index) => {
                                         return (
                                             <div key={answer.id} className="answers-content">
@@ -216,7 +234,8 @@ const Questions = () => {
                                                 </div>
                                             </div>
                                         );
-                                    })}
+                                    })
+                                }
                             </div>
                         );
                     })}
@@ -230,6 +249,25 @@ const Questions = () => {
                         </button>
                     </div>
                 }
+                <Lightbox
+                    open={isPreviewImage}
+                    close={() => setIsPreviewImage(false)}
+                    slides={[
+                        { src: dataImagePreview }
+                    ]}
+                    render={{
+                        buttonPrev: () => null,
+                        buttonNext: () => null,
+                        iconPrev: () => null,
+                        iconNext: () => null,
+                    }}
+                    carousel={{
+                        finite: true,
+                        preload: 0,
+                        spacing: 0,
+                        padding: 0,
+                    }}
+                />
             </div>
         </div >
     );
