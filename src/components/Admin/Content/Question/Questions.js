@@ -8,32 +8,33 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { AiOutlineMinusCircle } from "react-icons/ai";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 import { v4 as uuidv4 } from 'uuid';
+import { toast } from 'react-toastify';
 import _ from 'lodash';
 import Lightbox from "yet-another-react-lightbox";
 
 const Questions = () => {
 
+    const initQuestions = [
+        {
+            id: uuidv4(),
+            description: '',
+            imageFile: '',
+            imageName: '',
+            answers: [
+                {
+                    id: uuidv4(),
+                    description: '',
+                    isCorrect: false
+                }
+            ]
+        }
+    ]
+
     const [listQuiz, setListQuiz] = useState([]);
     const [isPreviewImage, setIsPreviewImage] = useState(false);
     const [dataImagePreview, setDataImagePreview] = useState("");
     const [selectedQuiz, setSelectedQuiz] = useState({});
-    const [questions, setQuestions] = useState(
-        [
-            {
-                id: uuidv4(),
-                description: '',
-                imageFile: '',
-                imageName: '',
-                answers: [
-                    {
-                        id: uuidv4(),
-                        description: '',
-                        isCorrect: false
-                    }
-                ]
-            }
-        ]
-    );
+    const [questions, setQuestions] = useState(initQuestions);
 
     useEffect(() => {
         fetchQuiz();
@@ -144,14 +145,68 @@ const Questions = () => {
     }
 
     const handleSubmitQuestionForQuiz = async () => {
+        // validate quiz
+        if (_.isEmpty(selectedQuiz)) {
+            toast.error("Please choose a quiz");
+            return;
+        }
+
+        // validate answer
+        let isValidAnswer = true;
+        let indexQuestion = 0, indexAnswer = 0;
+
+        for (let i = 0; i < questions.length; i++) {
+            let countCorrect = 0;
+            for (let j = 0; j < questions[i].answers.length; j++) {
+                if (questions[i].answers[j].isCorrect) countCorrect++;
+                if (!questions[i].answers[j].description) {
+                    isValidAnswer = false;
+                    indexAnswer = j;
+                    break;
+                }
+            }
+            indexQuestion = i;
+            if (countCorrect === 0) isValidAnswer = false;
+            if (isValidAnswer === false) break;
+        }
+
+        if (isValidAnswer === false) {
+            toast.error(`Not empty answer ${indexAnswer + 1} at Question ${indexQuestion + 1}`);
+            return;
+        }
+
+        // validate question
+        let isValidQuestion = true;
+        let indexQuestion1 = 0;
+        for (let i = 0; i < questions.length; i++) {
+            if (!questions[i].description) {
+                isValidQuestion = false;
+                indexQuestion1 = i;
+                break;
+            }
+        }
+
+        if (isValidQuestion === false) {
+            toast.error(`Not empty description for Question ${indexQuestion1 + 1}`);
+            return;
+        }
+
         // submit questions
-        await Promise.all(questions.map(async (question) => {
-            const q = await postCreateNewQuestionForQuiz(selectedQuiz.value, question.description, question.imageFile);
-            // submit answers
-            await Promise.all(question.answers.map(async (answer) => {
-                await postCreateNewAnswerForQuestion(answer.description, answer.isCorrect, q.DT.id);
-            }));
-        }));
+        for (const question of questions) {
+            const q = await postCreateNewQuestionForQuiz(
+                +selectedQuiz,
+                question.description,
+                question.imageFile);
+            for (const answer of question.answers) {
+                await postCreateNewAnswerForQuestion(
+                    answer.description,
+                    answer.isCorrect,
+                    q.DT.id);
+            }
+        }
+
+        toast.success("Create questions and answers succeed!");
+        setQuestions(initQuestions);
     }
 
     const handlePreviewImage = (questionId) => {
