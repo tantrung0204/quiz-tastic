@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Select from "react-select";
-import './Questions.scss';
+import './QuizQA.scss';
 import { getAllQuizForAdmin, postCreateNewAnswerForQuestion, postCreateNewQuestionForQuiz } from "../../../../services/apiServices";
 import { FaPlusCircle } from "react-icons/fa";
 import { FaMinusCircle } from "react-icons/fa";
@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import _ from 'lodash';
 import Lightbox from "yet-another-react-lightbox";
 
-const Questions = () => {
+const QuizQA = () => {
 
     const initQuestions = [
         {
@@ -220,10 +220,6 @@ const Questions = () => {
 
     return (
         <div className="questions-container">
-            <div className="title">
-                Manage Questions
-            </div>
-            <hr />
             <div className="add-new-question">
                 <div className="col-6 form-group">
                     <label className="mb-2">Select Quiz</label>
@@ -350,4 +346,4 @@ const Questions = () => {
     );
 }
 
-export default Questions;
+export default QuizQA;
