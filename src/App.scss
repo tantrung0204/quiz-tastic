@@ -56,15 +56,7 @@ body {
           color: aqua;
         }
       }
-
-      // .active {
-      //   color: red;
-      // }
     }
-
-    //  .nav-link.active {
-    //   color: red;
-    // }
   }
 
   .homepage-container {
@@ -103,6 +95,9 @@ body {
     }
   }
 
+  .app-content {
+    height: calc(100vh - 60px);
+  }
 }
 
 

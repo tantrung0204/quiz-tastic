@@ -1,6 +1,7 @@
 import Select from 'react-select';
 import { useState, useEffect } from 'react';
-import { getAllQuizForAdmin, getAllUsers } from '../../../../services/apiServices';
+import { getAllQuizForAdmin, getAllUsers, postAssignQuiz } from '../../../../services/apiServices';
+import { toast } from 'react-toastify';
 
 const AssignQuiz = (props) => {
     const [listUser, setListUser] = useState([]);
@@ -19,7 +20,7 @@ const AssignQuiz = (props) => {
             let newQuiz = res.DT.map(item => {
                 return {
                     value: item.id,
-                    label: `${item.id} - ${item.description}`
+                    label: `${item.id} - ${item.name}`
                 }
             })
             setListQuiz(newQuiz);
@@ -29,13 +30,22 @@ const AssignQuiz = (props) => {
     const fetchUser = async () => {
         let res = await getAllUsers();
         if (res && res.EC === 0) {
-            let users = res.DT.map(item => {
+            let users = res.DT.map(user => {
                 return {
-                    value: item.id,
-                    label: `${item.id} - ${item.username} - ${item.email}`
+                    value: user.id,
+                    label: `${user.id} - ${user.username} - ${user.email}`
                 }
             })
             setListUser(users);
+        }
+    }
+
+    const handleAssign = async () => {
+        const res = await postAssignQuiz(selectedQuiz.value, selectedUser.value);
+        if (res && res.EC === 0) {
+            toast.success(res.EM);
+        } else {
+            toast.error(res.EM);
         }
     }
 
@@ -53,12 +63,17 @@ const AssignQuiz = (props) => {
                 <label className="mb-2">Select User:</label>
                 <Select
                     defaultValue={selectedUser}
-                    onChange={setSelectedQuiz}
+                    onChange={setSelectedUser}
                     options={listUser}
                 />
             </div>
             <div>
-                <button className='btn btn-primary mt-3'>Assign</button>
+                <button
+                    onClick={() => handleAssign()}
+                    className='btn btn-primary mt-3'
+                >
+                    Assign
+                </button>
             </div>
         </div>
     );
