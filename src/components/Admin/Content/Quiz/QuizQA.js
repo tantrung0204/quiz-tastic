@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import './QuizQA.scss';
-import { getAllQuizForAdmin, getQuizWithQA, postCreateNewAnswerForQuestion, postCreateNewQuestionForQuiz } from "../../../../services/apiServices";
+import { getAllQuizForAdmin, getQuizWithQA, postCreateNewAnswerForQuestion, postCreateNewQuestionForQuiz, postUpsertQA } from "../../../../services/apiServices";
 import { FaPlusCircle } from "react-icons/fa";
 import { FaMinusCircle } from "react-icons/fa";
 import { AiOutlinePlusCircle } from "react-icons/ai";
@@ -9,7 +9,7 @@ import { AiOutlineMinusCircle } from "react-icons/ai";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'react-toastify';
-import _ from 'lodash';
+import _, { toFinite } from 'lodash';
 import Lightbox from "yet-another-react-lightbox";
 
 const QuizQA = () => {
@@ -191,10 +191,10 @@ const QuizQA = () => {
 
     const handleSubmitQuestionForQuiz = async () => {
         // validate quiz
-        if (_.isEmpty(selectedQuiz)) {
-            toast.error("Please choose a quiz");
-            return;
-        }
+        // if (_.isEmpty(selectedQuiz)) {
+        //     toast.error("Please choose a quiz");
+        //     return;
+        // }
 
         // validate answer
         let isValidAnswer = true;
@@ -236,23 +236,28 @@ const QuizQA = () => {
             return;
         }
 
-        // submit questions
-        for (const question of questions) {
-            const q = await postCreateNewQuestionForQuiz(
-                +selectedQuiz,
-                question.description,
-                question.imageFile);
-            for (const answer of question.answers) {
-                await postCreateNewAnswerForQuestion(
-                    answer.description,
-                    answer.isCorrect,
-                    q.DT.id);
+        let questionsClone = _.cloneDeep(questions);
+        for (let i = 0; i < questionsClone.length; i++) {
+            if (questionsClone[i].imageFile) {
+                questionsClone[i].imageFile = await toBase64(questionsClone[i].imageFile);
             }
         }
 
-        toast.success("Create questions and answers succeed!");
-        setQuestions(initQuestions);
+        let res = await postUpsertQA({
+            quizId: selectedQuiz.value,
+            questions: questionsClone
+        });
+
+        // toast.success("Create questions and answers succeed!");
+        // setQuestions(initQuestions);
     }
+
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+    });
 
     const handlePreviewImage = (questionId) => {
         let questionsClone = _.cloneDeep(questions);
