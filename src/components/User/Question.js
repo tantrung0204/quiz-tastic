@@ -1,7 +1,10 @@
 import _ from 'lodash';
+import { useState } from 'react';
+import Lightbox from 'yet-another-react-lightbox';
 
 const Question = (props) => {
     const { index, data } = props;
+    const [isPreviewImage, setIsPreviewImage] = useState(false);
     if (_.isEmpty(data)) {
         return (<></>);
     }
@@ -14,7 +17,29 @@ const Question = (props) => {
         <>
             {data.image ?
                 <div className='q-image'>
-                    <img src={`data:image/jpeg;base64, ${data.image}`} alt='Question' />
+                    <img
+                        style={{ cursor: "pointer" }}
+                        onClick={() => setIsPreviewImage(true)}
+                        src={`data:image/jpeg;base64, ${data.image}`} alt='Question' />
+                    <Lightbox
+                        open={isPreviewImage}
+                        close={() => setIsPreviewImage(false)}
+                        slides={[
+                            { src: `data:image/jpeg;base64, ${data.image}` }
+                        ]}
+                        render={{
+                            buttonPrev: () => null,
+                            buttonNext: () => null,
+                            iconPrev: () => null,
+                            iconNext: () => null,
+                        }}
+                        carousel={{
+                            finite: true,
+                            preload: 0,
+                            spacing: 0,
+                            padding: 0,
+                        }}
+                    />
                 </div>
                 :
                 <div className='q-image'>

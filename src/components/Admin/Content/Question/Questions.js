@@ -203,7 +203,7 @@ const Questions = () => {
                     answer.isCorrect,
                     q.DT.id);
             }
-        }
+        }   
 
         toast.success("Create questions and answers succeed!");
         setQuestions(initQuestions);

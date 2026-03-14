@@ -248,8 +248,10 @@ const QuizQA = () => {
             questions: questionsClone
         });
 
-        // toast.success("Create questions and answers succeed!");
-        // setQuestions(initQuestions);
+        if (res && res.EC === 0) {
+            toast.success(res.EM);
+            fetchQuizWithQA();
+        }
     }
 
     const toBase64 = file => new Promise((resolve, reject) => {
